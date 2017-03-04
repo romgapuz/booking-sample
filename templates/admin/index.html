@@ -1,0 +1,23 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+            <h1>eKonek</h1>
+            <p class="lead">
+                Customer-Worker Services Bridge
+            </p>
+            <p>
+                This application contains listing of workers ready to accept job requests from customers.
+                Both customers and workers will use a mobile app to request/accept jobs.
+            </p>
+            <p>
+                The customer request jobs using the <b>Customer App</b> by providing the location and
+                service required. The mobile app will show the list of skilled workers for the selected
+                service. The workers will use the <b>Worker App</b> to accept the job and read the details.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock body %}
