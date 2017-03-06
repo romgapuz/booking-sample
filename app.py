@@ -22,7 +22,8 @@ from views import (
     UserView,
     BookingView,
     AddressView,
-    FeedbackView
+    FeedbackView,
+    ServiceView
 )
 from api import (
     UserApi,
@@ -69,7 +70,7 @@ admin.add_view(BookingView(Booking, db.session))
 admin.add_view(AddressView(Address, db.session))
 admin.add_view(FeedbackView(Feedback, db.session))
 admin.add_view(sqla.ModelView(Message, db.session))
-admin.add_view(sqla.ModelView(Service, db.session))
+admin.add_view(ServiceView(Service, db.session))
 
 def build_sample_db():
     db.drop_all()
