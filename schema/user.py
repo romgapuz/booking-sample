@@ -1,5 +1,6 @@
-from schema import ma
-from models import User
+from schema.base import ma
+from models.user import User
+
 
 class UserSchema(ma.ModelSchema):
     class Meta:

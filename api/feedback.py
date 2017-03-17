@@ -1,7 +1,15 @@
 from flask import jsonify
 from flask.views import MethodView
-from models import Feedback
-from schema import FeedbackSchema
+from models.feedback import Feedback
+from schema.feedback import FeedbackSchema
+
+
+def register(app):
+    app.add_url_rule(
+        '/user/<id>/feedback',
+        view_func=FeedbackApi.as_view('user_id_feedback')
+    )
+
 
 class FeedbackApi(MethodView):
     def get(self, id):

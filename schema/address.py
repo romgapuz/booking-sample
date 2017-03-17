@@ -1,5 +1,6 @@
-from schema import ma
-from models import Address
+from schema.base import ma
+from models.address import Address
+
 
 class AddressSchema(ma.ModelSchema):
     class Meta:

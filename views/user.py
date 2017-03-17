@@ -1,9 +1,8 @@
 from flask_admin.contrib import sqla
 from flask_admin.contrib.sqla import filters
-from models import (
-    User,
-    Service
-)
+from models.user import User
+from models.service import Service
+
 
 class UserView(sqla.ModelView):
     column_exclude_list = ['username', 'password']

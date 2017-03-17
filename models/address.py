@@ -1,7 +1,6 @@
-from models import (
-    db,
-    User
-)
+from models.base import db
+from models.user import User
+
 
 class Address(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,7 +8,6 @@ class Address(db.Model):
     unit = db.Column(db.String(50))
     street = db.Column(db.String(50))
     city = db.Column(db.String(50))
-    
     user_id = db.Column(db.Integer(), db.ForeignKey(User.id))
     user = db.relationship(User, backref='addresses')
 

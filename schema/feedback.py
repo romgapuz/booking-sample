@@ -1,5 +1,6 @@
-from schema import ma
-from models import Feedback
+from schema.base import ma
+from models.feedback import Feedback
+
 
 class FeedbackSchema(ma.ModelSchema):
     class Meta:

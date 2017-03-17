@@ -1,5 +1,5 @@
 from flask_admin.contrib import sqla
-from flask_admin.contrib.sqla import filters
+
 
 class FeedbackView(sqla.ModelView):
     column_labels = dict(user='Worker')

@@ -1,4 +1,5 @@
-from models import db
+from models.base import db
+
 
 class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)

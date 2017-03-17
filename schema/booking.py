@@ -1,5 +1,6 @@
-from schema import ma
-from models import Booking
+from schema.base import ma
+from models.booking import Booking
+
 
 class BookingSchema(ma.ModelSchema):
     class Meta:

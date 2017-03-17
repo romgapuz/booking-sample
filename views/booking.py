@@ -1,9 +1,8 @@
 from flask_admin.contrib import sqla
 from wtforms import validators
-from models import (
-    Service,
-    User
-)
+from models.service import Service
+from models.user import User
+
 
 class BookingView(sqla.ModelView):
     column_exclude_list = ['details']
@@ -23,13 +22,23 @@ class BookingView(sqla.ModelView):
     form_args = dict(
         details=dict(validators=[validators.required()])
     )
-    
+
     form_ajax_refs = {
         'customer': {
-            'fields': (User.first_name, User.last_name, User.username, User.email)
+            'fields': (
+                User.first_name,
+                User.last_name,
+                User.username,
+                User.email
+            )
         },
         'worker': {
-            'fields': (User.first_name, User.last_name, User.username, User.email)
+            'fields': (
+                User.first_name,
+                User.last_name,
+                User.username,
+                User.email
+            )
         },
         'service': {
             'fields': (Service.name,)

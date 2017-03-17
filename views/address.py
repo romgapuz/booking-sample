@@ -1,6 +1,7 @@
 from flask_admin.contrib import sqla
 from flask_admin.contrib.sqla import filters
-from models import Address
+from models.address import Address
+
 
 class AddressView(sqla.ModelView):
     column_labels = dict(user='Customer')

@@ -1,8 +1,7 @@
-from models import (
-    db,
-    User,
-    Service
-)
+from models.base import db
+from models.user import User
+from models.service import Service
+
 
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -10,7 +9,6 @@ class Booking(db.Model):
     booking_time = db.Column(db.Time)
     details = db.Column(db.String(240))
     is_taken = db.Column(db.Boolean)
-    
     service_name = db.Column(db.String(100), db.ForeignKey(Service.name))
     service = db.relationship(Service, backref='service')
     customer_id = db.Column(db.Integer(), db.ForeignKey(User.id))
