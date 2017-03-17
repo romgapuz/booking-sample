@@ -12,15 +12,15 @@ def register(app):
         view_func=UserApi.as_view('user'))
     app.add_url_rule(
         '/user/<id>',
-        view_func=UserApiId.as_view('user_id')
+        view_func=UserIdApi.as_view('user_id')
     )
     app.add_url_rule(
         '/login',
-        view_func=Login.as_view('login')
+        view_func=LoginApi.as_view('login')
     )
     app.add_url_rule(
         '/register',
-        view_func=Register.as_view('register')
+        view_func=RegisterApi.as_view('register')
     )
 
 
@@ -30,7 +30,7 @@ class UserApi(MethodView):
         return jsonify(UserSchema(many=True).dump(result).data)
 
 
-class UserApiId(MethodView):
+class UserIdApi(MethodView):
     def get(self, id):
         try:
             result = User.query.filter_by(id=id).one()
@@ -39,7 +39,7 @@ class UserApiId(MethodView):
             return jsonify(UserSchema(many=True).dump(None).data), 404
 
 
-class Login(MethodView):
+class LoginApi(MethodView):
     def post(self):
         try:
             username = request.form['username']
@@ -59,7 +59,7 @@ class Login(MethodView):
         return "Login successful"
 
 
-class Register(MethodView):
+class RegisterApi(MethodView):
     def post(self):
         try:
             first_name = request.form['first_name']
