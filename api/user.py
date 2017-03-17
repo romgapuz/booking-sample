@@ -26,8 +26,11 @@ def register(app):
 
 class UserApi(MethodView):
     def get(self):
-        result = User.query.all()
-        return jsonify(UserSchema(many=True).dump(result).data)
+        try:
+            result = User.query.all()
+            return jsonify(UserSchema(many=True).dump(result).data)
+        except NoResultFound:
+            return jsonify(UserSchema(many=True).dump([]).data), 404
 
 
 class UserIdApi(MethodView):
