@@ -2,7 +2,7 @@ from flask import jsonify
 from flask.views import MethodView
 from flask import request
 from sqlalchemy.orm.exc import NoResultFound
-from models.user import User
+from models.user import User, add_customer
 from schema.user import UserSchema
 
 
@@ -17,6 +17,10 @@ def register(app):
     app.add_url_rule(
         '/login',
         view_func=Login.as_view('login')
+    )
+    app.add_url_rule(
+        '/register',
+        view_func=Register.as_view('register')
     )
 
 
@@ -40,8 +44,9 @@ class Login(MethodView):
         try:
             username = request.form['username']
             password = request.form['password']
-        except Exception:
-            return "Could not validate username and password", 403
+        except Exception, ex:
+            return "Could not validate username and password: {}". \
+                format(repr(ex)), 400
 
         try:
             user = User.query.filter_by(username=username).one()
@@ -52,3 +57,25 @@ class Login(MethodView):
             return "Username not found", 403
 
         return "Login successful"
+
+
+class Register(MethodView):
+    def post(self):
+        try:
+            first_name = request.form['first_name']
+            last_name = request.form['last_name']
+            username = request.form['username']
+            password = request.form['password']
+            email = request.form['email']
+
+            user_id = add_customer(
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                password=password,
+                email=email
+            )
+
+            return '{}'.format(user_id), 201
+        except Exception, ex:
+            return "Registration failed: {}".format(repr(ex)), 400

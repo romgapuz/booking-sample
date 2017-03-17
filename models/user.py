@@ -21,3 +21,18 @@ class User(db.Model):
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
+
+
+def add_customer(first_name, last_name, username, password, email):
+    user = User()
+    user.first_name = first_name
+    user.last_name = last_name
+    user.username = username
+    user.password = password
+    user.email = email
+    user.role = 'Customer'
+
+    db.session.add(user)
+    db.session.commit()
+
+    return user.id
