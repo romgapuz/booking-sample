@@ -5,6 +5,7 @@ import api.user as api_user
 import api.address as api_address
 import api.feedback as api_feedback
 import api.service as api_service
+import api.booking as api_booking
 from schema.base import ma
 from models.base import db
 import admin
@@ -33,6 +34,7 @@ api_user.register(app)
 api_address.register(app)
 api_feedback.register(app)
 api_service.register(app)
+api_booking.register(app)
 admin.register(app, db)
 
 
