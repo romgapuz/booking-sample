@@ -36,3 +36,20 @@ def add_customer(first_name, last_name, username, password, email):
     db.session.commit()
 
     return user.id
+
+
+def update_customer(id, first_name, last_name, username, password, email):
+    user = User.query.filter_by(id=id).one()
+
+    if first_name is not None:
+        user.first_name = first_name
+    if last_name is not None:
+        user.last_name = last_name
+    if username is not None:
+        user.username = username
+    if password is not None:
+        user.password = password
+    if email is not None:
+        user.email = email
+
+    db.session.commit()

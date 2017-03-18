@@ -2,7 +2,7 @@ from flask import jsonify
 from flask.views import MethodView
 from flask import request
 from sqlalchemy.orm.exc import NoResultFound
-from models.user import User, add_customer
+from models.user import User, add_customer, update_customer
 from schema.user import UserSchema
 
 
@@ -40,6 +40,37 @@ class UserIdApi(MethodView):
             return jsonify(UserSchema(many=False).dump(result).data)
         except NoResultFound:
             return jsonify(UserSchema(many=True).dump(None).data), 404
+
+    def put(self, id):
+        try:
+            first_name = request.form['first_name'] \
+                if 'first_name' in request.form else None
+            last_name = request.form['last_name'] \
+                if 'last_name' in request.form else None
+            username = request.form['username'] \
+                if 'username' in request.form else None
+            password = request.form['password'] \
+                if 'password' in request.form else None
+            email = request.form['email'] \
+                if 'email' in request.form else None
+        except Exception, ex:
+            return "Could not validate user information: {}". \
+                format(repr(ex)), 400
+
+        try:
+            update_customer(
+                id,
+                first_name,
+                last_name,
+                username,
+                password,
+                email
+            )
+        except Exception, ex:
+            return "Error updating user: {}". \
+                format(repr(ex)), 400
+
+        return jsonify(UserSchema(many=True).dump(None).data), 200
 
 
 class LoginApi(MethodView):
