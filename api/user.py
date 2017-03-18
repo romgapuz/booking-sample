@@ -19,6 +19,14 @@ def register(app):
         view_func=LoginApi.as_view('login')
     )
     app.add_url_rule(
+        '/customer/login',
+        view_func=CustomerLoginApi.as_view('customer_login')
+    )
+    app.add_url_rule(
+        '/worker/login',
+        view_func=WorkerLoginApi.as_view('worker_login')
+    )
+    app.add_url_rule(
         '/register',
         view_func=RegisterApi.as_view('register')
     )
@@ -89,6 +97,52 @@ class LoginApi(MethodView):
                 return "Incorrect password", 403
         except Exception:
             return "Username not found", 403
+
+        return str(user.id)
+
+
+class CustomerLoginApi(MethodView):
+    def post(self):
+        try:
+            username = request.form['username']
+            password = request.form['password']
+        except Exception, ex:
+            return "Could not validate username and password: {}". \
+                format(repr(ex)), 400
+
+        try:
+            user = User.query.filter_by(
+                username=username,
+                role='Customer'
+            ).one()
+
+            if user.password != password:
+                return "Incorrect password", 403
+        except Exception:
+            return "User not found", 403
+
+        return str(user.id)
+
+
+class WorkerLoginApi(MethodView):
+    def post(self):
+        try:
+            username = request.form['username']
+            password = request.form['password']
+        except Exception, ex:
+            return "Could not validate username and password: {}". \
+                format(repr(ex)), 400
+
+        try:
+            user = User.query.filter_by(
+                username=username,
+                role='Worker'
+            ).one()
+
+            if user.password != password:
+                return "Incorrect password", 403
+        except Exception:
+            return "User not found", 403
 
         return str(user.id)
 
