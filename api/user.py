@@ -90,7 +90,7 @@ class LoginApi(MethodView):
         except Exception:
             return "Username not found", 403
 
-        return "Login successful"
+        return str(user.id)
 
 
 class RegisterApi(MethodView):
