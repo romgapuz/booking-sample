@@ -32,13 +32,15 @@ def add_booking(
         booking_time,
         details,
         service_name,
-        customer_id):
+        customer_id,
+        worker_id):
     item = Booking()
     item.booking_date = booking_date
     item.booking_time = booking_time
     item.details = details
     item.service_name = service_name
     item.customer_id = customer_id
+    item.worker_id = worker_id
     item.is_taken = False
     item.is_done = False
 
