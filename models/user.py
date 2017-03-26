@@ -16,6 +16,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(80))
     email = db.Column(db.String(120), unique=True)
+    phone_no = db.Column(db.String(30))
     role = db.Column(db.String(20))
     services = db.relationship(Service, secondary=user_services_table)
 
@@ -23,13 +24,14 @@ class User(db.Model):
         return '{} {}'.format(self.first_name, self.last_name)
 
 
-def add_customer(first_name, last_name, username, password, email):
+def add_customer(first_name, last_name, username, password, email, phone_no):
     user = User()
     user.first_name = first_name
     user.last_name = last_name
     user.username = username
     user.password = password
     user.email = email
+    user.phone_no = phone_no
     user.role = 'Customer'
 
     db.session.add(user)
@@ -38,7 +40,7 @@ def add_customer(first_name, last_name, username, password, email):
     return user.id
 
 
-def update_customer(id, first_name, last_name, username, password, email):
+def update_customer(id, first_name, last_name, username, password, email, phone_no):
     user = User.query.filter_by(id=id).one()
 
     if first_name is not None:
@@ -51,5 +53,7 @@ def update_customer(id, first_name, last_name, username, password, email):
         user.password = password
     if email is not None:
         user.email = email
+    if phone_no is not None:
+        user.phone_no = phone_no
 
     db.session.commit()

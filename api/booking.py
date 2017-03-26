@@ -71,6 +71,7 @@ class BookingApi(MethodView):
             details = request.form['details']
             service_name = request.form['service_name']
             customer_id = request.form['customer_id']
+            customer_address_id = request.form['customer_address_id']
             worker_id = request.form['worker_id'] \
                 if 'worker_id' in request.form else None
 
@@ -80,6 +81,7 @@ class BookingApi(MethodView):
                 details,
                 service_name,
                 customer_id,
+                customer_address_id,
                 worker_id
             )
         except Exception, ex:
