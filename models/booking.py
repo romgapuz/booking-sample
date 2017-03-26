@@ -55,3 +55,10 @@ def update_as_done(id):
     item.is_done = True
 
     db.session.commit()
+
+
+def approve_customer_booking(id):
+    item = Booking.query.filter_by(id=id).one()
+    item.is_taken = True
+
+    db.session.commit()

@@ -5,7 +5,8 @@ from sqlalchemy.orm.exc import NoResultFound
 from models.booking import (
     Booking,
     add_booking,
-    update_as_done
+    update_as_done,
+    approve_customer_booking
 )
 from schema.booking import BookingSchema
 from models.booking_request import (
@@ -52,6 +53,12 @@ def register(app):
     app.add_url_rule(
         '/worker/<id>/booking',
         view_func=WorkerIdBookingApi.as_view('worker_id_booking')
+    )
+    app.add_url_rule(
+        '/worker/booking/<id>/approve',
+        view_func=WorkerBookingIdApproveApi.as_view(
+            'worker_booking_id_approve'
+        )
     )
 
 
@@ -174,7 +181,22 @@ class WorkerIdBookingApi(MethodView):
     def get(self, id):
         """get bookings by worker id"""
         try:
-            result = Booking.query.filter_by(worker_id=id).all()
+            is_taken = request.args.get('is_taken', 0)
+
+            result = Booking.query.filter_by(
+                worker_id=id,
+                is_taken=is_taken
+            ).all()
             return jsonify(BookingSchema(many=True).dump(result).data)
         except NoResultFound:
             return jsonify(BookingSchema(many=True).dump([]).data), 404
+
+
+class WorkerBookingIdApproveApi(MethodView):
+    def put(self, id):
+        """approve a customer booking request by ID"""
+        try:
+            approve_customer_booking(id)
+        except Exception, ex:
+            return "Error approving customer booking request: {}". \
+                format(repr(ex)), 400
