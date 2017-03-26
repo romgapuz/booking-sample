@@ -59,8 +59,8 @@ class BookingApi(MethodView):
     def post(self):
         """create booking"""
         try:
-            booking_date = datetime.datetime.strptime(request.form['booking_date'], "%Y-%m-%d").date()
-            booking_time = datetime.datetime.strptime(request.form['booking_time'], '%H:%M:%S').time()
+            booking_date = datetime.datetime.strptime(request.form['booking_date'], "%m/%d/%Y").date()
+            booking_time = datetime.datetime.strptime(request.form['booking_time'], '%I:%M %p').time()
             details = request.form['details']
             service_name = request.form['service_name']
             customer_id = request.form['customer_id']
@@ -126,8 +126,8 @@ class BookingIdRequestApi(MethodView):
     def post(self, id):
         """(worker) create request for booking"""
         try:
-            booking_date = datetime.datetime.strptime(request.form['booking_date'], "%Y-%m-%d").date()
-            booking_time = datetime.datetime.strptime(request.form['booking_time'], '%H:%M:%S').time()
+            booking_date = datetime.datetime.strptime(request.form['booking_date'], "%m/%d/%Y").date()
+            booking_time = datetime.datetime.strptime(request.form['booking_time'], '%I:%M %p').time()
             details = request.form['details']
             worker_id = request.form['worker_id']
 
