@@ -2,7 +2,11 @@ from flask import jsonify
 from flask.views import MethodView
 from flask import request
 from sqlalchemy.orm.exc import NoResultFound
-from models.booking import Booking
+from models.booking import (
+    Booking,
+    add_booking,
+    update_as_done
+)
 from schema.booking import BookingSchema
 from models.booking_request import (
     BookingRequest,
@@ -15,6 +19,14 @@ import datetime
 
 def register(app):
     """register the booking api endpoints"""
+    app.add_url_rule(
+        '/booking',
+        view_func=BookingApi.as_view('booking')
+    )
+    app.add_url_rule(
+        '/booking/<id>/done',
+        view_func=BookingIdDoneApi.as_view('booking_id_done')
+    )
     app.add_url_rule(
         '/booking/available',
         view_func=BookingAvailableApi.as_view('booking_available')
@@ -41,6 +53,42 @@ def register(app):
         '/worker/<id>/booking',
         view_func=WorkerIdBookingApi.as_view('worker_id_booking')
     )
+
+
+class BookingApi(MethodView):
+    def post(self):
+        """create booking"""
+        try:
+            booking_date = datetime.datetime.strptime(request.form['booking_date'], "%Y-%m-%d").date()
+            booking_time = datetime.datetime.strptime(request.form['booking_time'], '%H:%M:%S').time()
+            details = request.form['details']
+            service_name = request.form['service_name']
+            customer_id = request.form['customer_id']
+
+            add_booking(
+                booking_date,
+                booking_time,
+                details,
+                service_name,
+                customer_id
+            )
+        except Exception, ex:
+            return "Error creating booking: {}". \
+                format(repr(ex)), 400
+
+        return jsonify(BookingSchema(many=False).dump(None).data), 201
+
+
+class BookingIdDoneApi(MethodView):
+    def put(self, id):
+        """Update booking as done"""
+        try:
+            update_as_done(id)
+        except Exception, ex:
+            return "Error updating booking as done: {}". \
+                format(repr(ex)), 400
+
+        return jsonify(BookingSchema(many=False).dump(None).data), 200
 
 
 class BookingAvailableApi(MethodView):

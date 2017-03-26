@@ -25,3 +25,31 @@ class Booking(db.Model):
             self.booking_date,
             self.booking_time
         )
+
+
+def add_booking(
+        booking_date,
+        booking_time,
+        details,
+        service_name,
+        customer_id):
+    item = Booking()
+    item.booking_date = booking_date
+    item.booking_time = booking_time
+    item.details = details
+    item.service_name = service_name
+    item.customer_id = customer_id
+    item.is_taken = False
+    item.is_done = False
+
+    db.session.add(item)
+    db.session.commit()
+
+    return item.id
+
+
+def update_as_done(id):
+    item = Booking.query.filter_by(id=id).one()
+    item.is_done = True
+
+    db.session.commit()
