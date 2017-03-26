@@ -47,7 +47,7 @@ class UserIdApi(MethodView):
             result = User.query.filter_by(id=id).one()
             return jsonify(UserSchema(many=False).dump(result).data)
         except NoResultFound:
-            return jsonify(UserSchema(many=True).dump(None).data), 404
+            return jsonify(UserSchema(many=False).dump(None).data), 404
 
     def put(self, id):
         try:

@@ -9,6 +9,7 @@ class Booking(db.Model):
     booking_time = db.Column(db.Time)
     details = db.Column(db.String(240))
     is_taken = db.Column(db.Boolean)
+    is_done = db.Column(db.Boolean)
     service_name = db.Column(db.String(100), db.ForeignKey(Service.name))
     service = db.relationship(Service, backref='service')
     customer_id = db.Column(db.Integer(), db.ForeignKey(User.id))
@@ -17,4 +18,10 @@ class Booking(db.Model):
     worker = db.relationship(User, foreign_keys=[worker_id])
 
     def __str__(self):
-        return self.service
+        return 'Need "{}" by "{} {}" on "{} {}"'.format(
+            self.service.name,
+            self.customer.first_name,
+            self.customer.last_name,
+            self.booking_date,
+            self.booking_time
+        )
