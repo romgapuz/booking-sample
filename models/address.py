@@ -13,3 +13,22 @@ class Address(db.Model):
 
     def __str__(self):
         return self.address_type
+
+
+def add_address(
+        id,
+        address_type,
+        unit,
+        street,
+        city):
+    item = Address()
+    item.address_type = address_type
+    item.unit = unit
+    item.street = street
+    item.city = city
+    item.user_id = id
+
+    db.session.add(item)
+    db.session.commit()
+
+    return item.id
