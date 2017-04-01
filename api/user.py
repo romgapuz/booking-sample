@@ -4,6 +4,7 @@ from flask import request
 from sqlalchemy.orm.exc import NoResultFound
 from models.user import User, add_customer, update_customer
 from schema.user import UserSchema
+from utils.email_sender import EmailSender
 
 
 def register(app):
@@ -21,6 +22,10 @@ def register(app):
     app.add_url_rule(
         '/customer/login',
         view_func=CustomerLoginApi.as_view('customer_login')
+    )
+    app.add_url_rule(
+        '/customer/<id>/verify',
+        view_func=CustomerIdVerifyApi.as_view('customer_id_verify')
     )
     app.add_url_rule(
         '/worker/login',
@@ -61,6 +66,10 @@ class UserIdApi(MethodView):
                 if 'password' in request.form else None
             email = request.form['email'] \
                 if 'email' in request.form else None
+            phone_no = request.form['phone_no'] \
+                if 'phone_no' in request.form else None
+            is_verified = request.form['is_verified'] \
+                if 'is_verified' in request.form else None
         except Exception, ex:
             return "Could not validate user information: {}". \
                 format(repr(ex)), 400
@@ -72,7 +81,9 @@ class UserIdApi(MethodView):
                 last_name,
                 username,
                 password,
-                email
+                email,
+                phone_no,
+                is_verified
             )
         except Exception, ex:
             return "Error updating user: {}". \
@@ -91,12 +102,15 @@ class LoginApi(MethodView):
                 format(repr(ex)), 400
 
         try:
-            user = User.query.filter_by(username=username).one()
+            user = User.query.filter_by(
+                username=username,
+                is_verified=True
+            ).one()
 
             if user.password != password:
                 return "Incorrect password", 403
         except Exception:
-            return "Username not found", 403
+            return "Username not found or verified", 403
 
         return str(user.id)
 
@@ -113,7 +127,8 @@ class CustomerLoginApi(MethodView):
         try:
             user = User.query.filter_by(
                 username=username,
-                role='Customer'
+                role='Customer',
+                is_verified=True
             ).one()
 
             if user.password != password:
@@ -122,6 +137,55 @@ class CustomerLoginApi(MethodView):
             return "User not found", 403
 
         return str(user.id)
+
+
+class CustomerIdVerifyApi(MethodView):
+    def post(self, id):
+        try:
+            item = User.query.filter_by(
+                id=id,
+                role='Customer',
+                is_verified=False,
+            ).one()
+        except Exception, ex:
+            return "Customer not found or already verified: {}". \
+                format(repr(ex)), 400
+    
+        try:
+            es = EmailSender()
+            es.send_verification(item.id, item.email, item.first_name)
+        except Exception, ex:
+            return "Sending email failed: {}". \
+                format(repr(ex)), 500
+
+        return "Verification email sent"
+
+    def get(self, id):
+        try:
+            item = User.query.filter_by(
+                id=id,
+                role='Customer',
+                is_verified=False
+            ).one()
+        except Exception:
+            return "Customer not found or already verified", 403
+
+        try:
+            update_customer(
+                id,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                True
+            )
+        except Exception, ex:
+            return "Error verifying customer: {}". \
+                format(repr(ex)), 500
+
+        return "Customer verified successfully"
 
 
 class WorkerLoginApi(MethodView):

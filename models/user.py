@@ -18,6 +18,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True)
     phone_no = db.Column(db.String(30))
     role = db.Column(db.String(20))
+    is_verified = db.Column(db.Boolean)
     services = db.relationship(Service, secondary=user_services_table)
 
     def __str__(self):
@@ -33,6 +34,7 @@ def add_customer(first_name, last_name, username, password, email, phone_no):
     user.email = email
     user.phone_no = phone_no
     user.role = 'Customer'
+    user.is_verified = False
 
     db.session.add(user)
     db.session.commit()
@@ -40,7 +42,7 @@ def add_customer(first_name, last_name, username, password, email, phone_no):
     return user.id
 
 
-def update_customer(id, first_name, last_name, username, password, email, phone_no):
+def update_customer(id, first_name, last_name, username, password, email, phone_no, is_verified):
     user = User.query.filter_by(id=id).one()
 
     if first_name is not None:
@@ -55,5 +57,7 @@ def update_customer(id, first_name, last_name, username, password, email, phone_
         user.email = email
     if phone_no is not None:
         user.phone_no = phone_no
+    if is_verified is not None:
+        user.is_verified = is_verified
 
     db.session.commit()

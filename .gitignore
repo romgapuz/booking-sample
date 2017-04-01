@@ -100,3 +100,5 @@ ENV/
 !.vscode/extensions.json
 
 *.sqlite
+
+app.ini
