@@ -219,13 +219,17 @@ class RegisterApi(MethodView):
             username = request.form['username']
             password = request.form['password']
             email = request.form['email']
+            address = request.form['address']
+            phone_no = request.form['phone_no']
 
             user_id = add_customer(
-                first_name=first_name,
-                last_name=last_name,
-                username=username,
-                password=password,
-                email=email
+                first_name,
+                last_name,
+                username,
+                password,
+                email,
+                address,
+                phone_no
             )
 
             return '{}'.format(user_id), 201

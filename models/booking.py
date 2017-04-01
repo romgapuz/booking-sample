@@ -1,7 +1,6 @@
 from models.base import db
 from models.user import User
 from models.service import Service
-from models.address import Address
 
 
 class Booking(db.Model):
@@ -15,8 +14,6 @@ class Booking(db.Model):
     service = db.relationship(Service, backref='service')
     customer_id = db.Column(db.Integer(), db.ForeignKey(User.id))
     customer = db.relationship(User, foreign_keys=[customer_id])
-    customer_address_id = db.Column(db.Integer(), db.ForeignKey(Address.id))
-    customer_address = db.relationship(Address, foreign_keys=[customer_address_id])
     worker_id = db.Column(db.Integer(), db.ForeignKey(User.id))
     worker = db.relationship(User, foreign_keys=[worker_id])
 
@@ -36,7 +33,6 @@ def add_booking(
         details,
         service_name,
         customer_id,
-        customer_address_id,
         worker_id):
     item = Booking()
     item.booking_date = booking_date
@@ -44,7 +40,6 @@ def add_booking(
     item.details = details
     item.service_name = service_name
     item.customer_id = customer_id
-    item.customer_address_id = customer_address_id
     item.worker_id = worker_id
     item.is_taken = False
     item.is_done = False

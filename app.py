@@ -2,7 +2,6 @@ import os
 import os.path as op
 from flask import Flask
 import api.user as api_user
-import api.address as api_address
 import api.feedback as api_feedback
 import api.service as api_service
 import api.booking as api_booking
@@ -31,7 +30,6 @@ ma.init_app(app)
 
 # api and admin registration
 api_user.register(app)
-api_address.register(app)
 api_feedback.register(app)
 api_service.register(app)
 api_booking.register(app)
