@@ -1,0 +1,8 @@
+[app]
+host={host name e.g. ekonek.com}
+
+[gmail]
+host=smtp.gmail.com:587
+sender={Google email address}@gmail.com
+username={Google email address}@gmail.com
+password={password}
