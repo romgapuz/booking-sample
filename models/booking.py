@@ -8,6 +8,7 @@ class Booking(db.Model):
     booking_date = db.Column(db.Date)
     booking_time = db.Column(db.Time)
     details = db.Column(db.String(240))
+    address = db.Column(db.String(200))
     is_taken = db.Column(db.Boolean)
     is_done = db.Column(db.Boolean)
     service_name = db.Column(db.String(100), db.ForeignKey(Service.name))
@@ -32,6 +33,7 @@ def add_booking(
         booking_time,
         details,
         service_name,
+        address,
         customer_id,
         worker_id):
     item = Booking()
@@ -39,6 +41,7 @@ def add_booking(
     item.booking_time = booking_time
     item.details = details
     item.service_name = service_name
+    item.address = address
     item.customer_id = customer_id
     item.worker_id = worker_id
     item.is_taken = False

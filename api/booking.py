@@ -70,6 +70,7 @@ class BookingApi(MethodView):
             booking_time = datetime.datetime.strptime(request.form['booking_time'], '%I:%M %p').time()
             details = request.form['details']
             service_name = request.form['service_name']
+            address = request.form['address']
             customer_id = request.form['customer_id']
             worker_id = request.form['worker_id'] \
                 if 'worker_id' in request.form else None
@@ -79,6 +80,7 @@ class BookingApi(MethodView):
                 booking_time,
                 details,
                 service_name,
+                address,
                 customer_id,
                 worker_id
             )
