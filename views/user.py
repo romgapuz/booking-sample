@@ -28,7 +28,7 @@ class UserView(sqla.ModelView):
         )
     )
 
-    form_excluded_columns = ['bookings', 'addresses', 'feedbacks', 'registration_id']
+    form_excluded_columns = ['bookings', 'addresses', 'feedbacks']
 
     form_choices = {
         'role': [
