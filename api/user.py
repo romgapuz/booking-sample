@@ -66,8 +66,12 @@ class UserIdApi(MethodView):
                 if 'password' in request.form else None
             email = request.form['email'] \
                 if 'email' in request.form else None
+            address = request.form['address'] \
+                if 'address' in request.form else None
             phone_no = request.form['phone_no'] \
                 if 'phone_no' in request.form else None
+            registration_id = request.form['registration_id'] \
+                if 'registration_id' in request.form else None
             is_verified = request.form['is_verified'] \
                 if 'is_verified' in request.form else None
         except Exception, ex:
@@ -82,7 +86,9 @@ class UserIdApi(MethodView):
                 username,
                 password,
                 email,
+                address,
                 phone_no,
+                registration_id,
                 is_verified
             )
         except Exception, ex:

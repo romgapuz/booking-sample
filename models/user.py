@@ -19,6 +19,7 @@ class User(db.Model):
     address = db.Column(db.String(200))
     phone_no = db.Column(db.String(30))
     role = db.Column(db.String(20))
+    registration_id = db.Column(db.String(300))
     is_verified = db.Column(db.Boolean)
     services = db.relationship(Service, secondary=user_services_table)
 
@@ -44,7 +45,7 @@ def add_customer(first_name, last_name, username, password, email, address, phon
     return user.id
 
 
-def update_customer(id, first_name, last_name, username, password, email, address, phone_no, is_verified):
+def update_customer(id, first_name, last_name, username, password, email, address, phone_no, registration_id, is_verified):
     user = User.query.filter_by(id=id).one()
 
     if first_name is not None:
@@ -61,6 +62,8 @@ def update_customer(id, first_name, last_name, username, password, email, addres
         user.address = address
     if phone_no is not None:
         user.phone_no = phone_no
+    if registration_id is not None:
+        user.registration_id = registration_id
     if is_verified is not None:
         user.is_verified = is_verified
 
