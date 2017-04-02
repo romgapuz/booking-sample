@@ -5,7 +5,7 @@ from models.service import Service
 
 
 class UserView(sqla.ModelView):
-    column_exclude_list = ['username', 'password']
+    column_exclude_list = ['username', 'password', 'registration_id']
 
     column_searchable_list = (
         'first_name',
