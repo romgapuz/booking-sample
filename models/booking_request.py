@@ -8,6 +8,7 @@ class BookingRequest(db.Model):
     booking_date = db.Column(db.Date)
     booking_time = db.Column(db.Time)
     details = db.Column(db.String(240))
+    status = db.Column(db.String(20))
     booking_id = db.Column(db.Integer(), db.ForeignKey(Booking.id))
     worker_id = db.Column(db.Integer(), db.ForeignKey(User.id))
     booking = db.relationship(Booking, foreign_keys=[booking_id])
@@ -29,6 +30,7 @@ def add_booking_request(
     item.booking_time = booking_time
     item.details = details
     item.worker_id = worker_id
+    item.status = 'Pending'
 
     db.session.add(item)
     db.session.commit()
@@ -37,9 +39,25 @@ def add_booking_request(
 
 
 def approve_request(id):
-    booking_request = BookingRequest.query.filter_by(id=id).one()
-    booking = Booking.query.filter_by(id=booking_request.booking_id).one()
+    # approve selected request
+    booking_request = BookingRequest.query.filter_by(
+        id=id,
+        status='Pending'
+    ).one()
+    booking_request.status = 'Approved'
 
+    # reject other requests
+    booking_requests = BookingRequest.query.filter(
+        ~BookingRequest.id.in_(id)
+    ).filter_by(
+        booking_id=booking_request.booking_id,
+        status='Pending'
+    ).all()
+    for item in booking_requests:
+        item.status = 'Rejected'
+
+    # update booking details
+    booking = Booking.query.filter_by(id=booking_request.booking_id).one()
     booking.booking_date = booking_request.booking_date
     booking.booking_time = booking_request.booking_time
     booking.details = booking_request.details

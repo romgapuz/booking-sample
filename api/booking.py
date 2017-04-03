@@ -162,6 +162,8 @@ class BookingRequestIdApproveApi(MethodView):
         """(customer) approve booking request"""
         try:
             approve_request(id)
+        except NoResultFound:
+            return "Booking request not found or already approved", 400
         except Exception, ex:
             return "Error approving booking request: {}". \
                 format(repr(ex)), 400
