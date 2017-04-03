@@ -65,3 +65,13 @@ def approve_request(id):
     booking.is_taken = True
 
     db.session.commit()
+
+
+def reject_request(id):
+    booking_request = BookingRequest.query.filter_by(
+        id=id,
+        status='Pending'
+    ).one()
+    booking_request.status = 'Rejected'
+
+    db.session.commit()

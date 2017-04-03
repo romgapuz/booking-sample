@@ -12,7 +12,8 @@ from schema.booking import BookingSchema
 from models.booking_request import (
     BookingRequest,
     add_booking_request,
-    approve_request
+    approve_request,
+    reject_request
 )
 from schema.booking_request import BookingRequestSchema
 import datetime
@@ -44,6 +45,12 @@ def register(app):
         '/booking/request/<id>/approve',
         view_func=BookingRequestIdApproveApi.as_view(
             'booking_request_id_approve'
+        )
+    )
+    app.add_url_rule(
+        '/booking/request/<id>/reject',
+        view_func=BookingRequestIdRejectApi.as_view(
+            'booking_request_id_reject'
         )
     )
     app.add_url_rule(
@@ -163,9 +170,23 @@ class BookingRequestIdApproveApi(MethodView):
         try:
             approve_request(id)
         except NoResultFound:
-            return "Booking request not found or already approved", 400
+            return "Booking request not found or already approved or rejected", 400
         except Exception, ex:
             return "Error approving booking request: {}". \
+                format(repr(ex)), 400
+
+        return jsonify(BookingRequestSchema(many=False).dump(None).data), 200
+
+
+class BookingRequestIdRejectApi(MethodView):
+    def put(self, id):
+        """(customer) reject booking request"""
+        try:
+            reject_request(id)
+        except NoResultFound:
+            return "Booking request not found or already approved or rejected", 400
+        except Exception, ex:
+            return "Error rejecting booking request: {}". \
                 format(repr(ex)), 400
 
         return jsonify(BookingRequestSchema(many=False).dump(None).data), 200
