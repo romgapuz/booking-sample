@@ -7,10 +7,14 @@ class FeedbackView(sqla.ModelView):
     column_searchable_list = (
         'feedback_date',
         'details',
-        'user.first_name',
-        'user.last_name',
-        'user.username',
-        'user.email'
+        'customer.first_name',
+        'customer.last_name',
+        'customer.username',
+        'customer.email',
+        'worker.first_name',
+        'worker.last_name',
+        'worker.username',
+        'worker.email'
     )
 
     form_choices = {
