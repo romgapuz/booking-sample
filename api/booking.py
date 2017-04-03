@@ -121,9 +121,9 @@ class BookingIdApi(MethodView):
         """get booking by id"""
         try:
             result = Booking.query.filter_by(id=id).one()
-            return jsonify(BookingSchema(many=True).dump(result).data)
+            return jsonify(BookingSchema(many=False).dump(result).data)
         except NoResultFound:
-            return jsonify(BookingSchema(many=True).dump(None).data), 404
+            return jsonify(BookingSchema(many=False).dump(None).data), 404
 
 
 class BookingIdRequestApi(MethodView):
