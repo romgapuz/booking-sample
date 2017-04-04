@@ -8,6 +8,8 @@ from models.booking import (
     update_as_done,
     approve_customer_booking
 )
+from models.user import User
+from models.service import Service
 from schema.booking import BookingSchema
 from models.booking_request import (
     BookingRequest,
@@ -113,11 +115,27 @@ class BookingIdDoneApi(MethodView):
 class BookingAvailableApi(MethodView):
     def get(self):
         """get available booking by service ids"""
+        worker_id = request.args.get('worker_id', None)
+
         try:
-            result = Booking.query.filter_by(
-                is_taken=False,
-                worker_id=None
-            ).all()
+            if worker_id:
+                result = Booking.query.filter_by(
+                    is_taken=False,
+                    worker_id=None
+                ).join(
+                    Service,
+                    Booking.service
+                ).join(
+                    User,
+                    Service.users
+                ).filter_by(
+                    id=worker_id
+                ).all()
+            else:
+                result = Booking.query.filter_by(
+                    is_taken=False,
+                    worker_id=None
+                ).all()
             return jsonify(BookingSchema(many=True).dump(result).data)
         except NoResultFound:
             return jsonify(BookingSchema(many=True).dump([]).data), 404

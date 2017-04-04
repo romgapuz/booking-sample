@@ -20,6 +20,7 @@ POST /worker/login - Login as worker
 GET /worker/<id>/booking - Get bookings by worker ID
 GET /worker/<id>/feedback - Get feedback by worker ID
 GET /booking/available - Get available bookings
+GET /booking/available?worker_id=<id> - Get available bookings for a worker considering the services he cater
 POST /booking/<id>/request - Create request to a booking
   - booking_date
   - booking_time
