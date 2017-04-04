@@ -21,7 +21,11 @@ class User(db.Model):
     role = db.Column(db.String(20))
     registration_id = db.Column(db.String(300))
     is_verified = db.Column(db.Boolean)
-    services = db.relationship(Service, secondary=user_services_table)
+    services = db.relationship(
+        Service,
+        secondary=user_services_table,
+        backref=db.backref('users')
+    )
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
