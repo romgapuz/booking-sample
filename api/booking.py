@@ -36,6 +36,10 @@ def register(app):
         view_func=BookingAvailableApi.as_view('booking_available')
     )
     app.add_url_rule(
+        '/booking/taken',
+        view_func=BookingTakenApi.as_view('booking_taken')
+    )
+    app.add_url_rule(
         '/booking/<id>',
         view_func=BookingIdApi.as_view('booking_id')
     )
@@ -147,6 +151,40 @@ class BookingAvailableApi(MethodView):
                     result = Booking.query.filter_by(
                         is_taken=False,
                         worker_id=None
+                    ).all()
+            return jsonify(BookingSchema(many=True).dump(result).data)
+        except NoResultFound:
+            return jsonify(BookingSchema(many=True).dump([]).data), 404
+
+
+class BookingTakenApi(MethodView):
+    def get(self):
+        """get taken booking by service ids"""
+        worker_id = request.args.get('worker_id', None)
+        customer_id = request.args.get('customer_id', None)
+
+        if worker_id and customer_id:
+            return 'Either the worker_id and ' + \
+                'customer_id should be provided', 400
+
+        try:
+            if worker_id:
+                result = Booking.query.filter_by(
+                    is_taken=True,
+                    is_done=False,
+                    worker_id=worker_id
+                ).all()
+            else:
+                if customer_id:
+                    result = Booking.query.filter_by(
+                        customer_id=customer_id,
+                        is_taken=True,
+                        is_done=False
+                    ).all()
+                else:
+                    result = Booking.query.filter_by(
+                        is_taken=True,
+                        is_done=False
                     ).all()
             return jsonify(BookingSchema(many=True).dump(result).data)
         except NoResultFound:
