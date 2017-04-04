@@ -11,7 +11,7 @@ class Booking(db.Model):
     address = db.Column(db.String(200))
     is_taken = db.Column(db.Boolean)
     is_done = db.Column(db.Boolean)
-    service_id = db.Column(db.Integer, db.ForeignKey(Service.id))
+    service_name = db.Column(db.Integer, db.ForeignKey(Service.name))
     service = db.relationship(Service, backref='service')
     customer_id = db.Column(db.Integer(), db.ForeignKey(User.id))
     customer = db.relationship(User, foreign_keys=[customer_id])
