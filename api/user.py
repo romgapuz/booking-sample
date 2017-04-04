@@ -186,6 +186,7 @@ class CustomerIdVerifyApi(MethodView):
                 None,
                 None,
                 None,
+                None,
                 True
             )
         except Exception, ex:
