@@ -44,6 +44,7 @@ POST /customer/<id>/verify - send verification email
 GET /customer/<id>/verify - verify a customer account
 GET /service/<id>/worker - Get workers providing a service by ID
 GET /customer/<id>/booking - Get booking by customer ID
+*GET /booking/available?customer_id - Get available booking by customer ID
 GET /customer/<id>/feedback - Get feedback by customer ID
 GET /booking/<id>/request - Get requests for a booking by ID
 PUT /booking/request/<id>/approve - Approve a request for a booking by request ID

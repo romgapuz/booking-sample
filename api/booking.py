@@ -116,6 +116,11 @@ class BookingAvailableApi(MethodView):
     def get(self):
         """get available booking by service ids"""
         worker_id = request.args.get('worker_id', None)
+        customer_id = request.args.get('customer_id', None)
+
+        if worker_id and customer_id:
+            return 'Either the worker_id and ' + \
+                'customer_id should be provided', 400
 
         try:
             if worker_id:
@@ -132,10 +137,17 @@ class BookingAvailableApi(MethodView):
                     id=worker_id
                 ).all()
             else:
-                result = Booking.query.filter_by(
-                    is_taken=False,
-                    worker_id=None
-                ).all()
+                if customer_id:
+                    result = Booking.query.filter_by(
+                        customer_id=customer_id,
+                        is_taken=False,
+                        worker_id=None
+                    ).all()
+                else:
+                    result = Booking.query.filter_by(
+                        is_taken=False,
+                        worker_id=None
+                    ).all()
             return jsonify(BookingSchema(many=True).dump(result).data)
         except NoResultFound:
             return jsonify(BookingSchema(many=True).dump([]).data), 404
