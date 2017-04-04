@@ -8,7 +8,6 @@ class BookingRequestView(sqla.ModelView):
 
     column_searchable_list = (
         'details',
-        'booking.service_name',
         'worker.first_name',
         'worker.last_name',
         'worker.username',
