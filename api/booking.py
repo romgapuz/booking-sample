@@ -6,7 +6,8 @@ from models.booking import (
     Booking,
     add_booking,
     update_as_done,
-    approve_customer_booking
+    approve_customer_booking,
+    update_booking
 )
 from models.user import User
 from models.service import Service
@@ -199,6 +200,40 @@ class BookingIdApi(MethodView):
             return jsonify(BookingSchema(many=False).dump(result).data)
         except NoResultFound:
             return jsonify(BookingSchema(many=False).dump(None).data), 404
+
+    def put(self, id):
+        try:
+            booking_date = datetime.datetime.strptime(request.form['booking_date'], "%m/%d/%Y").date() \
+                if 'booking_date' in request.form else None
+            booking_time = datetime.datetime.strptime(request.form['booking_time'], '%I:%M %p').time() \
+                if 'booking_time' in request.form else None
+            details = request.form['details'] \
+                if 'details' in request.form else None
+            address = request.form['address'] \
+                if 'address' in request.form else None
+            is_taken = request.form['is_taken'] \
+                if 'is_taken' in request.form else None
+            is_done = request.form['is_done'] \
+                if 'is_done' in request.form else None
+        except Exception, ex:
+            return "Could not validate booking information: {}". \
+                format(repr(ex)), 400
+
+        try:
+            update_booking(
+                id,
+                booking_date,
+                booking_time,
+                details,
+                address,
+                is_taken,
+                is_done
+            )
+        except Exception, ex:
+            return "Error updating booking: {}". \
+                format(repr(ex)), 400
+
+        return jsonify(BookingSchema(many=True).dump(None).data), 200
 
 
 class BookingIdRequestApi(MethodView):

@@ -53,6 +53,32 @@ def add_booking(
     return item.id
 
 
+def update_booking(
+        id,
+        booking_date,
+        booking_time,
+        details,
+        address,
+        is_taken,
+        is_done):
+    booking = Booking.query.filter_by(id=id).one()
+
+    if booking_date is not None:
+        booking.booking_date = booking_date
+    if booking_time is not None:
+        booking.booking_time = booking_time
+    if details is not None:
+        booking.details = details
+    if address is not None:
+        booking.address = address
+    if is_taken is not None:
+        booking.is_taken = is_taken
+    if is_done is not None:
+        booking.is_done = is_done
+
+    db.session.commit()
+
+
 def update_as_done(id):
     item = Booking.query.filter_by(id=id).one()
     item.is_done = True
