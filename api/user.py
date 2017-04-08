@@ -18,8 +18,8 @@ def register(app):
         view_func=UserIdApi.as_view('user_id')
     )
     app.add_url_rule(
-        '/user/<id>/forgot',
-        view_func=UserIdForgotApi.as_view('user_id_forgot')
+        '/user/<email>/forgot',
+        view_func=UserEmailForgotApi.as_view('user_email_forgot')
     )
     app.add_url_rule(
         '/reset/<id>',
@@ -133,8 +133,14 @@ class UserIdForgotApi(MethodView):
 
 
 class ResetIdApi(MethodView):
-    def get(self, id):
-        new_password = apply_password(id)
+    def get(self, email):
+        try:
+            item = User.query.filter_by(email=email).one()
+        except Exception, ex:
+            return "User not found: {}". \
+                format(repr(ex)), 400
+
+        new_password = apply_password(item.id)
 
         return "Password successfully reset. New password is {}".format(
             new_password)

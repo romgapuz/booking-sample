@@ -18,7 +18,7 @@ PUT /booking/<id> - Update booking
   - address
   - is_taken
   - is_done
-POST /user/<id>/forgot - Initiate a forgot password
+POST /user/<email>/forgot - Initiate a forgot password
 GET /reset/<id> - Apply passowrd reset
 
 Worker:
@@ -55,6 +55,7 @@ POST /customer/<id>/verify - send verification email
 GET /customer/<id>/verify - verify a customer account
 GET /service/<id>/worker - Get workers providing a service by ID
 GET /customer/<id>/booking - Get booking by customer ID
+*GET /customer/<id>/booking?is_taken=1 - Get booking by customer ID
 GET /booking/available?customer_id - Get available booking by customer ID
 GET /booking/taken?customer_id = Get taken booking by customer ID
 GET /customer/<id>/feedback - Get feedback by customer ID
