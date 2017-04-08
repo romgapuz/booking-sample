@@ -62,7 +62,11 @@ class FeedbackApi(MethodView):
             details = request.form['details']
             customer_id = request.form['customer_id']
             worker_id = request.form['worker_id']
+        except Exception, ex:
+            return "Could not validate feedback information: {}". \
+                format(repr(ex)), 400
 
+        try:
             add_feedback(
                 star,
                 feedback_date,
