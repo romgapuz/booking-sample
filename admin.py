@@ -1,4 +1,5 @@
 import flask_admin as admin
+from flask_admin.contrib import sqla
 from views.user import UserView
 from views.booking import BookingView
 from views.booking_request import BookingRequestView
@@ -9,6 +10,7 @@ from models.user import User
 from models.booking import Booking
 from models.booking_request import BookingRequest
 from models.feedback import Feedback
+from models.reset_password import ResetPassword
 
 
 def register(app, db):
@@ -21,3 +23,4 @@ def register(app, db):
     admin_view.add_view(BookingRequestView(BookingRequest, db.session))
     admin_view.add_view(FeedbackView(Feedback, db.session))
     admin_view.add_view(ServiceView(Service, db.session))
+    admin_view.add_view(sqla.ModelView(ResetPassword, db.session))

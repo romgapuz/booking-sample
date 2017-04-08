@@ -24,9 +24,41 @@ class EmailSender(object):
             "",
             "Hi " + first_name,
             "",
-            "Thank you for registering at eKonek. " + \
-            "Please verify your account by clicking this link: " + \
+            "Thank you for registering at eKonek. " +
+            "Please verify your account by clicking this link: " +
             "http://" + app_host + "/customer/" + str(id) + "/verify",
+            "",
+            "Regards,",
+            "",
+            "eKonek Team"
+        ])
+        server.sendmail(sender, email, message_body)
+        server.quit()
+
+    def send_password(self, id, email, first_name):
+        # get config entries
+        config = read_config()
+        app_host = config.get('app', 'host')
+        email_host = config.get('gmail', 'host')
+        sender = config.get('gmail', 'sender')
+        username = config.get('gmail', 'username')
+        password = config.get('gmail', 'password')
+
+        # send email
+        server = smtplib.SMTP(email_host)
+        server.ehlo()
+        server.starttls()
+        server.login(username, password)
+        message_body = "\r\n".join([
+            "From: " + sender,
+            "To: " + email,
+            "Subject: eKonek Forgot Password",
+            "",
+            "Hi " + first_name,
+            "",
+            "You have requested to reset your password. " +
+            "To continue to reset your password please click this link: " +
+            "http://" + app_host + "/reset/" + str(id),
             "",
             "Regards,",
             "",

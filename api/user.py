@@ -5,15 +5,25 @@ from sqlalchemy.orm.exc import NoResultFound
 from models.user import User, add_customer, update_customer
 from schema.user import UserSchema
 from utils.email_sender import EmailSender
+from models.reset_password import create_password, apply_password
 
 
 def register(app):
     app.add_url_rule(
         '/user/',
-        view_func=UserApi.as_view('user'))
+        view_func=UserApi.as_view('user')
+    )
     app.add_url_rule(
         '/user/<id>',
         view_func=UserIdApi.as_view('user_id')
+    )
+    app.add_url_rule(
+        '/user/<id>/forgot',
+        view_func=UserIdForgotApi.as_view('user_id_forgot')
+    )
+    app.add_url_rule(
+        '/reset/<id>',
+        view_func=ResetIdApi.as_view('reset_id')
     )
     app.add_url_rule(
         '/login',
@@ -96,6 +106,38 @@ class UserIdApi(MethodView):
                 format(repr(ex)), 400
 
         return jsonify(UserSchema(many=True).dump(None).data), 200
+
+
+class UserIdForgotApi(MethodView):
+    def post(self, id):
+        try:
+            item = User.query.filter_by(
+                id=id,
+                role='Customer',
+                is_verified=True,
+            ).one()
+        except Exception, ex:
+            return "Customer not found: {}". \
+                format(repr(ex)), 400
+
+        password_id = create_password(item.id)
+
+        try:
+            es = EmailSender()
+            es.send_password(password_id, item.email, item.first_name)
+        except Exception, ex:
+            return "Sending email failed: {}". \
+                format(repr(ex)), 500
+
+        return "Forgot password email sent"
+
+
+class ResetIdApi(MethodView):
+    def get(self, id):
+        new_password = apply_password(id)
+
+        return "Password successfully reset. New password is {}".format(
+            new_password)
 
 
 class LoginApi(MethodView):

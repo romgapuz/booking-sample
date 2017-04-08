@@ -18,6 +18,8 @@ PUT /booking/<id> - Update booking
   - address
   - is_taken
   - is_done
+POST /user/<id>/forgot - Initiate a forgot password
+GET /reset/<id> - Apply passowrd reset
 
 Worker:
 
