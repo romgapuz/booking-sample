@@ -312,22 +312,20 @@ class CustomerIdBookingApi(MethodView):
         """get bookings by customer id"""
         try:
             is_taken = request.args.get('is_taken', None)
+            worker = request.args.get('worker', None)
 
             if is_taken is None:
                 result = Booking.query.filter_by(customer_id=id).all()
             else:
-                if is_taken == '1':
-                    result = Booking.query.filter_by(
-                        customer_id=id,
-                        is_taken=is_taken
-                    ).all()
+                query = Booking.query.filter_by(
+                    customer_id=id,
+                    is_taken=is_taken
+                )
+
+                if worker == '1':
+                    query.filter(Booking.worker_id.isnot(None)).all()
                 else:
-                    result = Booking.query.filter_by(
-                        customer_id=id,
-                        is_taken=is_taken
-                    ).filter(
-                        Booking.worker_id.is_(None)
-                    ).all()
+                    query.filter(Booking.worker_id.is_(None)).all()
 
             return jsonify(BookingSchema(many=True).dump(result).data)
         except NoResultFound:
