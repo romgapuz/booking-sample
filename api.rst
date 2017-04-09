@@ -8,6 +8,7 @@ PUT /user/<id> - Update user
   - password
   - email
   - address
+  - barangay
   - phone_no
   - registration_id
 GET /booking/<id> - Get booking by ID
@@ -50,6 +51,7 @@ POST /register - Register as customer
   - password
   - email
   - address
+  - barangay
   - phone_no
 POST /customer/<id>/verify - send verification email
 GET /customer/<id>/verify - verify a customer account
