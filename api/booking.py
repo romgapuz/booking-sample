@@ -326,7 +326,7 @@ class CustomerIdBookingApi(MethodView):
                         customer_id=id,
                         is_taken=is_taken
                     ).filter(
-                        Booking.worker_id.isnot(None)
+                        Booking.worker_id.is_(None)
                     ).all()
 
             return jsonify(BookingSchema(many=True).dump(result).data)
