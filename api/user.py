@@ -142,9 +142,9 @@ class UserForgotApi(MethodView):
 
 
 class ResetIdApi(MethodView):
-    def get(self, email):
+    def get(self, id):
         try:
-            item = User.query.filter_by(email=email).one()
+            item = User.query.filter_by(id=id).one()
         except Exception, ex:
             return "User not found: {}". \
                 format(repr(ex)), 400
