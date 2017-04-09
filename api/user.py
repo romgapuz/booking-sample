@@ -108,7 +108,7 @@ class UserIdApi(MethodView):
         return jsonify(UserSchema(many=True).dump(None).data), 200
 
 
-class UserIdForgotApi(MethodView):
+class UserEmailForgotApi(MethodView):
     def post(self, id):
         try:
             item = User.query.filter_by(
