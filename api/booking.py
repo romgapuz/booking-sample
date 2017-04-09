@@ -299,7 +299,16 @@ class CustomerIdBookingApi(MethodView):
     def get(self, id):
         """get bookings by customer id"""
         try:
-            result = Booking.query.filter_by(customer_id=id).all()
+            is_taken = request.args.get('is_taken', None)
+
+            if is_taken is None:
+                result = Booking.query.filter_by(customer_id=id).all()
+            else:
+                result = Booking.query.filter_by(
+                    customer_id=id,
+                    is_taken=is_taken
+                ).all()
+
             return jsonify(BookingSchema(many=True).dump(result).data)
         except NoResultFound:
             return jsonify(BookingSchema(many=True).dump([]).data), 404
