@@ -322,10 +322,13 @@ class CustomerIdBookingApi(MethodView):
                     is_taken=is_taken
                 )
 
-                if worker == '1':
-                    query.filter(Booking.worker_id.isnot(None)).all()
+                if worker is None:
+                    query.all()
                 else:
-                    query.filter(Booking.worker_id.is_(None)).all()
+                    if worker == '1':
+                        query.filter(Booking.worker_id.isnot(None)).all()
+                    else:
+                        query.filter(Booking.worker_id.is_(None)).all()
 
             return jsonify(BookingSchema(many=True).dump(result).data)
         except NoResultFound:
