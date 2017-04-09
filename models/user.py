@@ -17,6 +17,7 @@ class User(db.Model):
     password = db.Column(db.String(80))
     email = db.Column(db.String(120), unique=True)
     address = db.Column(db.String(200))
+    barangay = db.Column(db.String(100))
     phone_no = db.Column(db.String(30))
     role = db.Column(db.String(20))
     registration_id = db.Column(db.String(300))
@@ -31,7 +32,15 @@ class User(db.Model):
         return '{} {}'.format(self.first_name, self.last_name)
 
 
-def add_customer(first_name, last_name, username, password, email, address, phone_no):
+def add_customer(
+        first_name,
+        last_name,
+        username,
+        password,
+        email,
+        address,
+        barangay,
+        phone_no):
     user = User()
     user.first_name = first_name
     user.last_name = last_name
@@ -39,6 +48,7 @@ def add_customer(first_name, last_name, username, password, email, address, phon
     user.password = password
     user.email = email
     user.address = address
+    user.barangay = barangay
     user.phone_no = phone_no
     user.role = 'Customer'
     user.is_verified = False
@@ -49,7 +59,18 @@ def add_customer(first_name, last_name, username, password, email, address, phon
     return user.id
 
 
-def update_customer(id, first_name, last_name, username, password, email, address, phone_no, registration_id, is_verified):
+def update_customer(
+        id,
+        first_name,
+        last_name,
+        username,
+        password,
+        email,
+        address,
+        barangay,
+        phone_no,
+        registration_id,
+        is_verified):
     user = User.query.filter_by(id=id).one()
 
     if first_name is not None:
@@ -64,6 +85,8 @@ def update_customer(id, first_name, last_name, username, password, email, addres
         user.email = email
     if address is not None:
         user.address = address
+    if barangay is not None:
+        user.barangay = barangay
     if phone_no is not None:
         user.phone_no = phone_no
     if registration_id is not None:

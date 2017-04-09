@@ -78,6 +78,8 @@ class UserIdApi(MethodView):
                 if 'email' in request.form else None
             address = request.form['address'] \
                 if 'address' in request.form else None
+            barangay = request.form['barangay'] \
+                if 'barangay' in request.form else None
             phone_no = request.form['phone_no'] \
                 if 'phone_no' in request.form else None
             registration_id = request.form['registration_id'] \
@@ -97,6 +99,7 @@ class UserIdApi(MethodView):
                 password,
                 email,
                 address,
+                barangay,
                 phone_no,
                 registration_id,
                 is_verified
@@ -204,7 +207,7 @@ class CustomerIdVerifyApi(MethodView):
         except Exception, ex:
             return "Customer not found or already verified: {}". \
                 format(repr(ex)), 400
-    
+
         try:
             es = EmailSender()
             es.send_verification(item.id, item.email, item.first_name)
@@ -216,7 +219,7 @@ class CustomerIdVerifyApi(MethodView):
 
     def get(self, id):
         try:
-            item = User.query.filter_by(
+            User.query.filter_by(
                 id=id,
                 role='Customer',
                 is_verified=False
@@ -227,6 +230,7 @@ class CustomerIdVerifyApi(MethodView):
         try:
             update_customer(
                 id,
+                None,
                 None,
                 None,
                 None,
@@ -276,6 +280,7 @@ class RegisterApi(MethodView):
             password = request.form['password']
             email = request.form['email']
             address = request.form['address']
+            barangay = request.form['barangay']
             phone_no = request.form['phone_no']
 
             user_id = add_customer(
@@ -285,6 +290,7 @@ class RegisterApi(MethodView):
                 password,
                 email,
                 address,
+                barangay,
                 phone_no
             )
 
