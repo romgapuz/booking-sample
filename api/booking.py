@@ -131,6 +131,8 @@ class BookingAvailableApi(MethodView):
             if worker_id:
                 result = Booking.query.filter_by(
                     is_taken=False,
+                    is_done=False,
+                    is_cancel=False,
                     worker_id=None
                 ).join(
                     Service,
@@ -146,11 +148,15 @@ class BookingAvailableApi(MethodView):
                     result = Booking.query.filter_by(
                         customer_id=customer_id,
                         is_taken=False,
+                        is_done=False,
+                        is_cancel=False,
                         worker_id=None
                     ).all()
                 else:
                     result = Booking.query.filter_by(
                         is_taken=False,
+                        is_done=False,
+                        is_cancel=False,
                         worker_id=None
                     ).all()
             return jsonify(BookingSchema(many=True).dump(result).data)
@@ -173,6 +179,7 @@ class BookingTakenApi(MethodView):
                 result = Booking.query.filter_by(
                     is_taken=True,
                     is_done=False,
+                    is_cancel=False,
                     worker_id=worker_id
                 ).all()
             else:
@@ -180,12 +187,14 @@ class BookingTakenApi(MethodView):
                     result = Booking.query.filter_by(
                         customer_id=customer_id,
                         is_taken=True,
-                        is_done=False
+                        is_done=False,
+                        is_cancel=False,
                     ).all()
                 else:
                     result = Booking.query.filter_by(
                         is_taken=True,
-                        is_done=False
+                        is_done=False,
+                        is_cancel=False,
                     ).all()
             return jsonify(BookingSchema(many=True).dump(result).data)
         except NoResultFound:
@@ -215,6 +224,8 @@ class BookingIdApi(MethodView):
                 if 'is_taken' in request.form else None
             is_done = request.form['is_done'] \
                 if 'is_done' in request.form else None
+            is_cancel = request.form['is_cancel'] \
+                if 'is_cancel' in request.form else None
         except Exception, ex:
             return "Could not validate booking information: {}". \
                 format(repr(ex)), 400
@@ -227,7 +238,8 @@ class BookingIdApi(MethodView):
                 details,
                 address,
                 is_taken,
-                is_done
+                is_done,
+                is_cancel
             )
         except Exception, ex:
             return "Error updating booking: {}". \

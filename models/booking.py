@@ -11,6 +11,7 @@ class Booking(db.Model):
     address = db.Column(db.String(200))
     is_taken = db.Column(db.Boolean)
     is_done = db.Column(db.Boolean)
+    is_cancel = db.Column(db.Boolean)
     service_name = db.Column(db.Integer, db.ForeignKey(Service.name))
     service = db.relationship(Service, backref='service')
     customer_id = db.Column(db.Integer(), db.ForeignKey(User.id))
@@ -60,7 +61,8 @@ def update_booking(
         details,
         address,
         is_taken,
-        is_done):
+        is_done,
+        is_cancel):
     booking = Booking.query.filter_by(id=id).one()
 
     if booking_date is not None:
@@ -75,6 +77,8 @@ def update_booking(
         booking.is_taken = is_taken
     if is_done is not None:
         booking.is_done = is_done
+    if is_cancel is not None:
+        booking.is_cancel = is_cancel
 
     db.session.commit()
 

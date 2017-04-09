@@ -19,6 +19,7 @@ PUT /booking/<id> - Update booking
   - address
   - is_taken
   - is_done
+  - is_cancel
 POST /user/<email>/forgot - Initiate a forgot password
 GET /reset/<id> - Apply passowrd reset
 
