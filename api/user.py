@@ -18,8 +18,8 @@ def register(app):
         view_func=UserIdApi.as_view('user_id')
     )
     app.add_url_rule(
-        '/user/<email>/forgot',
-        view_func=UserEmailForgotApi.as_view('user_email_forgot')
+        '/user/forgot',
+        view_func=UserForgotApi.as_view('user_forgot')
     )
     app.add_url_rule(
         '/reset/<id>',
@@ -111,11 +111,17 @@ class UserIdApi(MethodView):
         return jsonify(UserSchema(many=True).dump(None).data), 200
 
 
-class UserEmailForgotApi(MethodView):
-    def post(self, id):
+class UserForgotApi(MethodView):
+    def post(self):
+        try:
+            email = request.form['email']
+        except Exception, ex:
+            return "Email parameter not found: {}". \
+                format(repr(ex)), 400
+
         try:
             item = User.query.filter_by(
-                id=id,
+                email=email,
                 role='Customer',
                 is_verified=True,
             ).one()

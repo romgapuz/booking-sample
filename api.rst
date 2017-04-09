@@ -20,7 +20,8 @@ PUT /booking/<id> - Update booking
   - is_taken
   - is_done
   - is_cancel
-POST /user/<email>/forgot - Initiate a forgot password
+POST /user/forgot - Initiate a forgot password
+  - email
 GET /reset/<id> - Apply passowrd reset
 
 Worker:
