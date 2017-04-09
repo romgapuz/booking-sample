@@ -316,7 +316,7 @@ class CustomerIdBookingApi(MethodView):
             if is_taken is None:
                 result = Booking.query.filter_by(customer_id=id).all()
             else:
-                if is_taken:
+                if is_taken == '1':
                     result = Booking.query.filter_by(
                         customer_id=id,
                         is_taken=is_taken
@@ -324,8 +324,9 @@ class CustomerIdBookingApi(MethodView):
                 else:
                     result = Booking.query.filter_by(
                         customer_id=id,
-                        is_taken=is_taken,
-                        worker_id=None
+                        is_taken=is_taken
+                    ).filter(
+                        Booking.worker_id.isnot(None)
                     ).all()
 
             return jsonify(BookingSchema(many=True).dump(result).data)
