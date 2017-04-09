@@ -47,6 +47,7 @@ def add_booking(
     item.worker_id = worker_id
     item.is_taken = False
     item.is_done = False
+    item.is_cancel = False
 
     db.session.add(item)
     db.session.commit()
