@@ -102,7 +102,7 @@ class BookingApi(MethodView):
                 items = None
 
             if items:
-                return "Booking for date and time already exist"
+                return "Booking for date and time already exist", 400
 
             add_booking(
                 booking_date,
@@ -244,6 +244,19 @@ class BookingIdApi(MethodView):
         except Exception, ex:
             return "Could not validate booking information: {}". \
                 format(repr(ex)), 400
+
+        try:
+            items = Booking.query.filter_by(
+                booking_date=booking_date,
+                booking_time=booking_time
+            ).filter(
+                Booking.id.isnot(id)
+            ).all()
+        except NoResultFound:
+            items = None
+
+        if items:
+            return "Booking for date and time already exist", 400
 
         try:
             update_booking(
