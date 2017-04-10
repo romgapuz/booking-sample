@@ -59,7 +59,6 @@ class FeedbackApi(MethodView):
                 ).date() \
                 if 'feedback_date' in request.form else \
                 datetime.datetime.now().date()
-                
             details = request.form['details']
             customer_id = request.form['customer_id']
             worker_id = request.form['worker_id']

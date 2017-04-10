@@ -88,6 +88,21 @@ class BookingApi(MethodView):
             customer_id = request.form['customer_id']
             worker_id = request.form['worker_id'] \
                 if 'worker_id' in request.form else None
+        except Exception, ex:
+            return "Could not validate booking information: {}". \
+                format(repr(ex)), 400
+
+        try:
+            try:
+                items = Booking.query.filter_by(
+                    booking_date=booking_date,
+                    booking_time=booking_time
+                ).all()
+            except NoResultFound:
+                items = None
+
+            if items:
+                return "Booking for date and time already exist"
 
             add_booking(
                 booking_date,
