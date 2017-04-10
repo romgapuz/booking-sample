@@ -312,31 +312,36 @@ class CustomerIdBookingApi(MethodView):
         """get bookings by customer id"""
         try:
             is_taken = request.args.get('is_taken', None)
+            is_done = request.args.get('is_done', None)
+            is_cancel = request.args.get('is_cancel', None)
             worker = request.args.get('worker', None)
 
-            if is_taken is None:
-                result = Booking.query.filter_by(
-                    customer_id=id,
-                    is_cancel=False
-                ).all()
-            else:
-                query = Booking.query.filter_by(
-                    customer_id=id,
-                    is_taken=is_taken,
-                    is_cancel=False
-                )
+            kwargs = {
+                'customer_id': id,
+                'is_cancel': False,
+                'is_done': False
+            }
 
-                if worker is None:
-                    result = query.all()
+            if is_taken is not None:
+                kwargs['is_taken'] = is_taken
+            if is_done is not None:
+                kwargs['is_done'] = is_done
+            if is_cancel is not None:
+                kwargs['is_cancel'] = is_cancel
+
+            query = Booking.query.filter_by(**kwargs)
+
+            if worker is None:
+                result = query.all()
+            else:
+                if worker == '1':
+                    result = query.filter(
+                        Booking.worker_id.isnot(None)
+                    ).all()
                 else:
-                    if worker == '1':
-                        result = query.filter(
-                            Booking.worker_id.isnot(None)
-                        ).all()
-                    else:
-                        result = query.filter(
-                            Booking.worker_id.is_(None)
-                        ).all()
+                    result = query.filter(
+                        Booking.worker_id.is_(None)
+                    ).all()
 
             return jsonify(BookingSchema(many=True).dump(result).data)
         except NoResultFound:
