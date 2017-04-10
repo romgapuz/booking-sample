@@ -315,11 +315,15 @@ class CustomerIdBookingApi(MethodView):
             worker = request.args.get('worker', None)
 
             if is_taken is None:
-                result = Booking.query.filter_by(customer_id=id).all()
+                result = Booking.query.filter_by(
+                    customer_id=id,
+                    is_cancel=False
+                ).all()
             else:
                 query = Booking.query.filter_by(
                     customer_id=id,
-                    is_taken=is_taken
+                    is_taken=is_taken,
+                    is_cancel=False
                 )
 
                 if worker is None:
